@@ -22,6 +22,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+
+
 /**
  * The Spring-boot main class.
  */
@@ -37,12 +39,14 @@ public class Application {
         String remoteURI = String.format("amqps://%s:%s?%s", config.getServiceName(), config.getServicePort(), config.getParameters());
 
         JmsConnectionFactory qpid = new JmsConnectionFactory(config.getUsername(), config.getPassword(), remoteURI);
-        qpid.setTopicPrefix("topic://");
+              
+        // Pooled Connection only work for Queue not for Topic !!!!!
+        //PooledConnectionFactory factory = new PooledConnectionFactory();
+        //factory.setConnectionFactory(qpid);
+        //return new AMQPComponent(factory);
         
-        PooledConnectionFactory factory = new PooledConnectionFactory();
-        factory.setConnectionFactory(qpid);
-
-        return new AMQPComponent(factory);
+        
+        return new AMQPComponent(qpid);
     }
 
 }
