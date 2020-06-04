@@ -92,11 +92,12 @@ public class AMQPDemo extends RouteBuilder {
 					.log("Sending Message ${body} to Queue amqp:queue:" + getQueueName())
 					.to("amqp:queue:" + getQueueName())
 			.end();
-	
+				
 			from("amqp:queue:" + getQueueName())
 				.routeId("route-from-queue-consumer").streamCaching().tracing()
 					.log("Recieved Message ${body} from Queue amqp:queue:" + getQueueName())
 			.end();
+				
 		}
 
 	}

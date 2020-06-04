@@ -15,9 +15,13 @@
  */
 package com.redhat.demo.rahmed;
 
+import javax.net.ssl.SSLContext;
+
 import org.apache.activemq.jms.pool.PooledConnectionFactory;
 import org.apache.camel.component.amqp.AMQPComponent;
 import org.apache.qpid.jms.JmsConnectionFactory;
+import org.apache.qpid.jms.transports.TransportOptions;
+import org.apache.qpid.jms.transports.TransportSupport;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -35,10 +39,21 @@ public class Application {
     }
 
     @Bean(name = "amqp-component")
-    AMQPComponent amqpComponent(AMQPConfiguration config) {
+    AMQPComponent amqpComponent(AMQPConfiguration config) throws Exception {
         String remoteURI = String.format("amqps://%s:%s?%s", config.getServiceName(), config.getServicePort(), config.getParameters());
 
         JmsConnectionFactory qpid = new JmsConnectionFactory(config.getUsername(), config.getPassword(), remoteURI);
+		/*
+		// Work In progress
+        TransportOptions sslOptions = new TransportOptions();
+        sslOptions.setKeyStoreLocation("");
+        sslOptions.setKeyStorePassword("");
+        sslOptions.setVerifyHost(false);
+
+        SSLContext context = TransportSupport.createJdkSslContext(sslOptions);
+        
+        qpid.setSslContext(context);
+        */
               
         // Pooled Connection only work for Queue not for Topic !!!!!
         //PooledConnectionFactory factory = new PooledConnectionFactory();
